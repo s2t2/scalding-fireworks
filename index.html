@@ -1,1 +1,78 @@
-<h1>World. Yo.</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>scalding-fireworks</title>
+    <script src="http://d3js.org/d3.v2.min.js?2.9.6"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      
+      var state_title = d3.select("body")
+                          .append("p")
+                          .text("whatup-world");
+      
+      var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];      
+      
+      var xScale = d3.scale.linear()
+        .domain([0, d3.max(dataset)])
+        .range([0, 500]);
+      
+      var xAxis = d3.svg.axis() //define here, then call and append
+        .scale(xScale)
+        .orient("bottom"); //refers to tick orientation (below or above the axis)
+        //.ticks(20);
+        
+      var svg_height = 500;
+      var svg_width = 600;
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("height", svg_height)
+        .attr("width", svg_width)
+        .style("border", "1px solid #ccc");
+      
+      var bar_height = (svg_height / dataset.length); //divide up the svg equally by the number of data points.
+      var bars = svg.selectAll("rect")
+                    .data(dataset)
+                    .enter()
+                    .append("rect")
+                      .attr("x",0)  //start each rect at the horizontal origin.
+                      .attr("y", function(d,i){
+                        return bar_height * i;  //start each rect below the one before it.
+                      })
+                      .attr("height", function(d){
+                        return bar_height - 3;  //apply constant rect heights.
+                      }) 
+                      .attr("width", function(d){
+                        return xScale(d);
+                      })
+                      .attr("fill", function(d,i){
+                        return "#ccc";  //#TODO: alternate fill colors                      
+                      });
+      
+      var labels = svg.selectAll("text")
+                      .data(dataset)
+                      .enter()
+                      .append("text")
+                        .attr("x", function(d){
+                          return xScale(d) + 5;  //place label to the right of the bar.
+                        })
+                        .attr("y", function(d,i){
+                          return (bar_height * i) + (bar_height * .65);  //place label in the middle-ish of the bar.
+                        })
+                        .text(function(d){
+                          return d; //display the data value as its label.
+                        })
+                        .attr("font-size", (bar_height * .5)); //font size should be smaller than the bar height 
+     
+      svg.append("g")
+        .attr("class", "axis") //give it a class for css styling
+        //.attr("transform", "translate(0, 30)") //move the g element by (y, x)
+        //.attr("transform", "translate(0," + "30)") //manipulate the js string by adding variables
+        .attr("transform", "translate(0," + (svg_height - 50) + ")" ) //etc.
+        .call(xAxis);
+
+
+    </script>
+  </body>
+</html>
