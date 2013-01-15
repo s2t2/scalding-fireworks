@@ -25,27 +25,30 @@
       {"id":"7",  "date":"2012-03-26",  "desc":"-oh"}
       ];
       //d3.select('body').append('p').text( projects[0].date + ': ' + projects[0].desc );
-      var pars = 
-      d3.select('body').selectAll("p") // .selectAll("p") is counterintuitive becuase they don't exist yet. OMG.
+      d3.select('body').selectAll("p")
         .data(projects)
         .enter()
           .append('p')
             .text(function(d) { 
               return d.date + ' | ' + d.desc; 
             })
-            .attr('class', 'hi') // p.hi
+            .attr('class', 'hi') //p.hi
             .attr('id', function(d){
               return 'number_' + d.id; //p#number5
             })
       ;
-      var canvas = 
       d3.select('body')
         .append('svg')
           .attr('height', 600)
           .attr('width', 800)
           .attr('class', 'sky') //svg.sky
       ;
-
+      d3.select('svg.sky').selectAll('g').data(projects).enter().append("g")
+        .attr('id', function(d){
+          return 'project-' + d.id ; //g#project-5
+        }) 
+        .attr('class',"project-container") //g.project-container
+      ;
 
     </script>
   </body>
