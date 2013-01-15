@@ -4,60 +4,47 @@
     <meta charset="utf-8">
     <title>scalding-fireworks</title>
     <style>
-
-    svg {
-      font: 10px sans-serif;
-    }
-
-    .y.axis path {
-      display: none;
-    }
-
-    .y.axis line {
-      stroke: #fff;
-      stroke-opacity: .2;
-      shape-rendering: crispEdges;
-    }
-
-    .y.axis .major line {
-      stroke: #000;
-      stroke-opacity: 1;
-    }
-    .title {
-      font: 300 78px Helvetica Neue;
-      fill: #666;
-    }
-    rect {
-      fill-opacity: .6;
-      fill: #e377c2;
-    }
-    
+      
+      svg {
+        font: 10px sans-serif;
+      }
+      
     </style>
     <script src="http://d3js.org/d3.v2.min.js?2.9.6"></script>
   </head>
   <body>
     <script type="text/javascript">
     
-    var projects = [
-    {"date":"2012-03-20","desc":"fun"},
-    {"date":"2012-03-21","desc":"in"},
-    {"date":"2012-03-22","desc":"the"},
-    {"date":"2012-03-23","desc":"sun"},
-    {"date":"2012-03-24","desc":"fa"},
-    {"date":"2012-03-25","desc":"sho"},
-    {"date":"2012-03-26","desc":"-oh"}
-    ];
-    
-    d3.select('body').append('p').text( projects[0].date + ': ' + projects[0].desc );
-    
-    d3.select('body').selectAll("p") // .selectAll("p") is counterintuitive becuase they don't exist yet. OMG.
-      .data(projects)
-      .enter()
-        .append('p').text(projects[0].date + ': ' + projects[0].desc);
-
-
-
-      
+      var projects = [
+      {"id":"1",  "date":"2012-03-20",  "desc":"fun"},
+      {"id":"2",  "date":"2012-03-21",  "desc":"in"},
+      {"id":"3",  "date":"2012-03-22",  "desc":"the"},
+      {"id":"4",  "date":"2012-03-23",  "desc":"sun"},
+      {"id":"5",  "date":"2012-03-24",  "desc":"fa"},
+      {"id":"6",  "date":"2012-03-25",  "desc":"sho"},
+      {"id":"7",  "date":"2012-03-26",  "desc":"-oh"}
+      ];
+      //d3.select('body').append('p').text( projects[0].date + ': ' + projects[0].desc );
+      var pars = 
+      d3.select('body').selectAll("p") // .selectAll("p") is counterintuitive becuase they don't exist yet. OMG.
+        .data(projects)
+        .enter()
+          .append('p')
+            .text(function(d) { 
+              return d.date + ' | ' + d.desc; 
+            })
+            .attr('class', 'hi') // p.hi
+            .attr('id', function(d){
+              return 'number_' + d.id; //p#number5
+            })
+      ;
+      var canvas = 
+      d3.select('body')
+        .append('svg')
+          .attr('height', 600)
+          .attr('width', 800)
+          .attr('class', 'sky') //svg.sky
+      ;
 
 
     </script>
