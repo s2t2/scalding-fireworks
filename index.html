@@ -13,15 +13,15 @@
         font-family: 'Droid Serif', serif;
         @import url(http://fonts.googleapis.com/css?family=Droid+Sans|Stalemate|Droid+Serif:400,700);
       */
-      div#container {
+      div#chart_container {
+        margin:25px auto;
         height: 400px;
-        width: 400px;
+        
         border:2px solid #000;
         overflow: scroll;
       }
-      svg#sky {
+      svg.project_row {
         height: 100px;
-        width: 1100px;
         border:1px dotted #ccc;
         font: 24px 'Lato', sans-serif;
         background-color: #ccc;
@@ -31,18 +31,47 @@
   </head>
   <body>
     <script type="text/javascript">
-    // Q: CAN YOU CONTAIN AN SVG WITH A SCROLLABLE PARENT DIV?
-      // div#container
-      var container = d3.select('body').append('div')
-          .attr('id','container')
+      
+      data = {
+        "projects": [
+          {'id':'1',  'title':"First Project"},
+          {'id':'2',  'title':"Second Project"},
+          {'id':'3',  'title':"Third Project"},
+          {'id':'4',  'title':"Fourth Project"},
+          {'id':'5',  'title':"Fifth Project"},
+          
+        ]
+      };
+      
+      var chart_title = d3.select('body').append('h3')
+          .attr('id','chart_title') // h3#chart_title
+        .text('Durations over Time')
       ;
       
-      // svg#sky
-      var sky = container.append('svg')
-          //.attr('height', 100)
-          //.attr('width', 100)
-          .attr('id', 'sky')
+      var chart_container = d3.select('body').append('div')
+          .attr('id','chart_container') // div#chart_container
       ;
+      
+      var project_rows = chart_container.selectAll('svg').data(data.projects).enter().append('svg')
+          .attr('class', 'project_row') // svg.project_row
+          .attr('id', function(d){
+            return 'project_' + d.id; // svg#project_[id]
+          })
+        .append('text')
+            .text(function(d){
+              return d.title;
+            })
+            .attr('class','project_title') // text.project_title
+            .attr('x', 10)
+            .attr('y', 30)
+      ;
+      
+      
+      
+      
+      
+    
+      
     </script>
   </body>
 </html>
