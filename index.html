@@ -7,6 +7,7 @@
       
       svg {
         font: 10px sans-serif;
+        border:3px solid #ccc;
       }
       
     </style>
@@ -25,31 +26,50 @@
       {"id":"7",  "date":"2012-03-26",  "desc":"-oh"}
       ];
       //d3.select('body').append('p').text( projects[0].date + ': ' + projects[0].desc );
-      d3.select('body').selectAll("p")
-        .data(projects)
-        .enter()
-          .append('p')
-            .text(function(d) { 
-              return d.date + ' | ' + d.desc; 
-            })
-            .attr('class', 'hi') //p.hi
-            .attr('id', function(d){
-              return 'number_' + d.id; //p#number5
-            })
+      //d3.select('body').selectAll("p")
+      //  .data(projects)
+      //  .enter()
+      //    .append('p')
+      //      .text(function(d) { 
+      //        return d.date + ' | ' + d.desc; 
+      //      })
+      //      .attr('class', 'hi') //p.hi
+      //      .attr('id', function(d){
+      //        return 'number_' + d.id; //p#number5
+      //      })
+      //;
+      
+      //svg#sky
+      d3.select('body').append('svg')
+        .attr('id', 'sky') 
+        .attr('height', 600)
+        .attr('width', 800)
+        .attr('title', "The Night Sky")
+        .attr('desc', "an svg element")
       ;
-      d3.select('body')
-        .append('svg')
-          .attr('height', 600)
-          .attr('width', 800)
-          .attr('class', 'sky') //svg.sky
-      ;
-      d3.select('svg.sky').selectAll('g').data(projects).enter().append("g")
+      //g#5
+      d3.select('svg#sky').selectAll('g').data(projects).enter().append("g")
         .attr('id', function(d){
-          return 'project-' + d.id ; //g#project-5
+          return d.id; 
         }) 
-        .attr('class',"project-container") //g.project-container
+        //g.project_containers
+        .attr('class',"project_containers")
+        .append('text')
+          //text#project5
+          .attr('id', function(d){
+            return 'project' + d.id;
+          })
+          //text.project_labels
+          .attr('class', 'project_labels')
+          .attr('x', 10)
+          .attr('y', function(d,i){
+            return i * 20;
+          })
+          .text(function(d) { 
+            return d.date + ' | ' + d.desc; 
+          })
       ;
-
+      
     </script>
   </body>
 </html>
