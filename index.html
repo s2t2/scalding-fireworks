@@ -4,15 +4,6 @@
     <meta charset="utf-8">
     <title>scalding-fireworks</title>
     <style>
-      /* GOOGLE FONTS
-        font-family: 'Droid Sans', sans-serif;
-        font-family: 'Lato', sans-serif;
-        font-family: 'Lora', serif;
-        font-family: 'Stalemate', cursive;
-        font-family: 'Droid Sans Mono', sans-serif;
-        font-family: 'Droid Serif', serif;
-        @import url(http://fonts.googleapis.com/css?family=Droid+Sans|Stalemate|Droid+Serif:400,700);
-      */
       .axis text {
         font-size:14px;
         font-family: serif;
@@ -23,7 +14,6 @@
           stroke: black;
           shape-rendering: crispEdges;
       }
-      
     </style>
     <script src="http://d3js.org/d3.v2.min.js?2.9.6"></script>
   </head>
@@ -31,34 +21,26 @@
     <script type="text/javascript">
       
       /////////////////////////////////////////////////////////////
-      // CHART: TITLE
-      /////////////////////////////////////////////////////////////
-      var chart_title = d3.select('body').append('h3')
-          .attr('id','chart_title') 
-        .text('Projects over Time')
-      ;
-      
-      /////////////////////////////////////////////////////////////
       // DATA
       /////////////////////////////////////////////////////////////
       var projects = [
-        {'id':'1',  'title':"First Project",  "durations": [
-            {"start":"2012-01-01",  "end":"2012-01-08"}
+        {id:1,  title:"First Project",  durations: [
+            {start:"2012-01-01",  end:"2012-01-08"}
           ]
         },
-        {'id':'2',  'title':"Second Project",  "durations": [
-            {"start":"2012-01-02",  "end":"2012-01-09"},
-            {"start":"2012-01-12",  "end":"2012-01-19"}
+        {id:2,  title:"Second Project",  durations: [
+            {start:"2012-01-02",  end:"2012-01-09"},
+            {start:"2012-01-12",  end:"2012-01-19"}
           ]
         },
-        {'id':'3',  'title':"Third Project",  "durations": [
-            {"start":"2012-01-03",  "end":"2012-01-10"},
-            {"start":"2012-01-13",  "end":"2012-01-20"},
-            {"start":"2012-01-23",  "end":"2012-01-30"}
+        {id:3,  title:"Third Project",  durations: [
+            {start:"2012-01-03",  end:"2012-01-10"},
+            {start:"2012-01-13",  end:"2012-01-20"},
+            {start:"2012-01-23",  end:"2012-01-30"}
           ]
         },
-        {'id':'4',  'title':"Fourth Project",  "durations": [
-            {"start":"2012-02-01",  "end":"2012-02-08"}
+        {id:4,  title:"Fourth Project",  durations: [
+            {start:"2012-02-01",  end:"2012-02-08"}
           ]
         },
         {id:5,  title:"Fifth Project",  durations: [
@@ -71,10 +53,17 @@
       var chart_height = 400;
       var time_scale_start = new Date('2012-01-01');
       var time_scale_end = new Date('2012-06-01');
+      var lemon = '#F7FCB9';
+      var limon = '#ADDD8E';
+      var lime = '#31A354';
       
       /////////////////////////////////////////////////////////////
-      // SCALE, AXIS, SVG
+      // ART
       /////////////////////////////////////////////////////////////
+      var chart_title = d3.select('body').append('h3')
+          .attr('id','chart_title') 
+        .text('Projects over Time')
+      ;
       var x = d3.time.scale()
         .domain([time_scale_start, time_scale_end])
         .range([chart_margin.left, chart_width - chart_margin.right])
@@ -89,86 +78,28 @@
           .attr('height', chart_height)
           .attr('width', chart_width)
           .attr('id',"chart")
-          .attr('style','background-color: #ccc;')
+          .attr('style','background-color: ' + lemon)
       ;
-      
-      
-      // SVG:G FOR EACH PROJECT
       var g = svg.selectAll('g').data(projects).enter().append('g')
           .attr('class', 'projects')
-          .attr('id',function(d){
-            return d.id;
-          })
+          .attr('id', function(d){ return d.id; })
       ;
-      
-      var rect = g.selectAll('rect').data(function(d){ 
-        console.log(d.durations);
-        return d.durations; 
-        }).enter().append('rect')
+      var rect = g.selectAll('rect').data(function(d){ return d.durations; }).enter().append('rect') //loop through each duration
+          .attr('class', 'durations')
+          .attr('id', function(d,i){ return i; })
+          .attr('x', function(d){ return x(new Date(d.start)); }) //pass the data through the time scale to convert to a number
+          .attr('y', function(d,i){ return chart_margin.top + (i*40); })
+          .attr('height', 10)
+          .attr('width', function(d){ return x(new Date(d.end)) - x(new Date(d.start)); }) //derive duration from start and end
+          .attr('fill', limon)
+          .attr('stroke', lime)
       ;
-        
-        
-      //var rect = g.selectAll('rect').data(projects).enter().append('rect')
-      //  .map(function(d) { return d.durations; })
-      //    .attr('class', 'durations')
-      //    .attr('id', function(d,i){
-      //      return d.length;
-      //    })
-      //    //.attr('x', 100)
-      //    //.attr('y', 100)
-      //    //.attr('height', 20)
-      //    //.attr('width', 40)
-      //;
-      
-      ////////////////////////////////////////////////////////////
-      // APPEND AXIS TO CHART
-      /////////////////////////////////////////////////////////////
-      //chart.append('svg:g')
-      //    .attr('id','x-axis')
-      //    .attr('class', 'axis')
-      //    .attr('transform', 'translate(0,' + (chart_height - chart_margin.bottom) + ')')
-      //    .attr('fill', '#1f77b4')
-      //    .call(xAxis)
-      //;
-      
-     
-      
-      
-      
-      
-      /////////////////////////////////////////////////////////////
-      // PROJECT DURATION BARS
-      /////////////////////////////////////////////////////////////
-      //var duration_bars = chart.selectAll('rect').data(projects).enter().append('rect')
-      //    
-      //    .attr('x', function(p){
-      //      return x(new Date (p.durations[0].start)); //pass the data through the time scale to convert to a number
-      //    })
-      //    .attr('y', function(p,i){
-      //      return chart_margin.top + (i*40);
-      //    })
-      //    .attr('height', 10)
-      //    .attr('width', function(p){
-      //      return x(new Date(p.durations[0].end)) - x(new Date(p.durations[0].start)); 
-      //    })
-      //;
-      
-      /////////////////////////////////////////////////////////////
-      // PROJECT TITLES
-      /////////////////////////////////////////////////////////////
-      //var project_titles = chart.selectAll('text').data(projects).enter().append('text')
-      //  .text(function(d){
-      //    return d.title;
-      //  })
-      //    .attr('class','project_titles')
-      //    .attr('x', 5)
-      //    .attr('y', function(d,i){
-      //      return chart_margin.top + (i * 40);
-      //    })
-      //;
-      
-      
-      
+      svg.append('g')
+          .attr('class', 'axis')
+          .attr('id','x-axis')
+          .attr('transform', 'translate(0,' + (chart_height - chart_margin.bottom) + ')')
+          .call(xAxis)
+      ;
       
     </script>
   </body>
