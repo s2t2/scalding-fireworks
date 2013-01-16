@@ -14,7 +14,7 @@
         @import url(http://fonts.googleapis.com/css?family=Droid+Sans|Stalemate|Droid+Serif:400,700);
       */
       .axis text {
-        font-size:16px;
+        font-size:14px;
         font-family: serif;
       }
       .axis path,
@@ -30,11 +30,13 @@
   <body>
     <script type="text/javascript">
       
-      //DRAW h3#chart_title
-      //var chart_title = d3.select('body').append('h3')
-      //    .attr('id','chart_title') 
-      //  .text('Projects over Time')
-      //;
+      /////////////////////////////////////////////////////////////
+      // CHART TITLE
+      /////////////////////////////////////////////////////////////
+      var chart_title = d3.select('body').append('h3')
+          .attr('id','chart_title') 
+        .text('Projects over Time')
+      ;
       
       /////////////////////////////////////////////////////////////
       // DATA
@@ -68,14 +70,14 @@
       var chart_width = 1000;
       var chart_height = 400;
       var time_scale_start = new Date('2012-01-01');
-      var time_scale_end = new Date('2012-12-31');
+      var time_scale_end = new Date('2013-01-01');
       
       /////////////////////////////////////////////////////////////
-      // SVG with SCALE and AXIS
+      // CHART SVG with SCALE and AXIS
       /////////////////////////////////////////////////////////////
       var x = d3.time.scale()
         .domain([time_scale_start, time_scale_end])
-        .range([chart_margin.left, chart_width - chart_margin.left - chart_margin.right])
+        .range([chart_margin.left, chart_width - chart_margin.right])
       ;
       var xAxis = d3.svg.axis()
         .scale(x)
@@ -92,12 +94,32 @@
       chart.append("g")
           .attr('id','x-axis')
           .attr('class', 'axis')
-          .attr('transform', 'translate(0,10)')
+          .attr('transform', 'translate(0,' + (chart_height - chart_margin.bottom) + ')')
           .call(xAxis)
       ;
-    
       
-      //text.project_titles
+      /////////////////////////////////////////////////////////////
+      // PROJECT DURATION BARS
+      /////////////////////////////////////////////////////////////
+      var duration_bars = chart.selectAll('rect').data(projects).enter().append('rect')
+          .attr('id',function(p){
+            return p.durations.length;
+          })
+          .attr('x', function(p){
+            return x(new Date (p.durations[0].start)); //pass the data through the time scale to convert to a number
+          })
+          .attr('y', function(p,i){
+            return chart_margin.top + (i*40);
+          })
+          .attr('height', 10)
+          .attr('width', function(p){
+            return x(new Date(p.durations[0].end)) - x(new Date(p.durations[0].start));
+          })
+      ;
+      
+      /////////////////////////////////////////////////////////////
+      // PROJECT TITLES
+      /////////////////////////////////////////////////////////////
       //var project_titles = chart.selectAll('text').data(projects).enter().append('text')
       //  .text(function(d){
       //    return d.title;
