@@ -31,7 +31,7 @@
     <script type="text/javascript">
       
       /////////////////////////////////////////////////////////////
-      // CHART TITLE
+      // CHART: TITLE
       /////////////////////////////////////////////////////////////
       var chart_title = d3.select('body').append('h3')
           .attr('id','chart_title') 
@@ -73,7 +73,7 @@
       var time_scale_end = new Date('2012-06-01');
       
       /////////////////////////////////////////////////////////////
-      // CHART SVG with SCALE and AXIS
+      // SCALE, AXIS, SVG
       /////////////////////////////////////////////////////////////
       var x = d3.time.scale()
         .domain([time_scale_start, time_scale_end])
@@ -85,37 +85,73 @@
         .ticks(d3.time.months)
         .tickFormat(d3.time.format('%m/%d/%y'))
       ;
-      var chart = d3.select('body').append('svg')
+      var svg = d3.select('body').append('svg')
           .attr('height', chart_height)
           .attr('width', chart_width)
           .attr('id',"chart")
           .attr('style','background-color: #ccc;')
       ;
-      chart.append("g")
-          .attr('id','x-axis')
-          .attr('class', 'axis')
-          .attr('transform', 'translate(0,' + (chart_height - chart_margin.bottom) + ')')
-          .call(xAxis)
+      
+      
+      // SVG:G FOR EACH PROJECT
+      var g = svg.selectAll('g').data(projects).enter().append('g')
+          .attr('class', 'projects')
+          .attr('id',function(d){
+            return d.id;
+          })
       ;
+      
+      var rect = g.selectAll('rect').data(function(d){ 
+        console.log(d.durations);
+        return d.durations; 
+        }).enter().append('rect')
+      ;
+        
+        
+      //var rect = g.selectAll('rect').data(projects).enter().append('rect')
+      //  .map(function(d) { return d.durations; })
+      //    .attr('class', 'durations')
+      //    .attr('id', function(d,i){
+      //      return d.length;
+      //    })
+      //    //.attr('x', 100)
+      //    //.attr('y', 100)
+      //    //.attr('height', 20)
+      //    //.attr('width', 40)
+      //;
+      
+      ////////////////////////////////////////////////////////////
+      // APPEND AXIS TO CHART
+      /////////////////////////////////////////////////////////////
+      //chart.append('svg:g')
+      //    .attr('id','x-axis')
+      //    .attr('class', 'axis')
+      //    .attr('transform', 'translate(0,' + (chart_height - chart_margin.bottom) + ')')
+      //    .attr('fill', '#1f77b4')
+      //    .call(xAxis)
+      //;
+      
+     
+      
+      
+      
       
       /////////////////////////////////////////////////////////////
       // PROJECT DURATION BARS
       /////////////////////////////////////////////////////////////
-      var duration_bars = chart.selectAll('rect').data(projects).enter().append('rect')
-          .attr('id',function(p){
-            return p.id;
-          })
-          .attr('x', function(p){
-            return x(new Date (p.durations[0].start)); //pass the data through the time scale to convert to a number
-          })
-          .attr('y', function(p,i){
-            return chart_margin.top + (i*40);
-          })
-          .attr('height', 10)
-          .attr('width', function(p){
-            return x(new Date(p.durations[0].end)) - x(new Date(p.durations[0].start)); 
-          })
-      ;
+      //var duration_bars = chart.selectAll('rect').data(projects).enter().append('rect')
+      //    
+      //    .attr('x', function(p){
+      //      return x(new Date (p.durations[0].start)); //pass the data through the time scale to convert to a number
+      //    })
+      //    .attr('y', function(p,i){
+      //      return chart_margin.top + (i*40);
+      //    })
+      //    .attr('height', 10)
+      //    .attr('width', function(p){
+      //      return x(new Date(p.durations[0].end)) - x(new Date(p.durations[0].start)); 
+      //    })
+      //;
       
       /////////////////////////////////////////////////////////////
       // PROJECT TITLES
