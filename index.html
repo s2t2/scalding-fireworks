@@ -70,7 +70,7 @@
       var chart_width = 1000;
       var chart_height = 400;
       var time_scale_start = new Date('2012-01-01');
-      var time_scale_end = new Date('2013-01-01');
+      var time_scale_end = new Date('2012-06-01');
       
       /////////////////////////////////////////////////////////////
       // CHART SVG with SCALE and AXIS
@@ -103,7 +103,7 @@
       /////////////////////////////////////////////////////////////
       var duration_bars = chart.selectAll('rect').data(projects).enter().append('rect')
           .attr('id',function(p){
-            return p.durations.length;
+            return p.id;
           })
           .attr('x', function(p){
             return x(new Date (p.durations[0].start)); //pass the data through the time scale to convert to a number
@@ -113,7 +113,7 @@
           })
           .attr('height', 10)
           .attr('width', function(p){
-            return x(new Date(p.durations[0].end)) - x(new Date(p.durations[0].start));
+            return x(new Date(p.durations[0].end)) - x(new Date(p.durations[0].start)); 
           })
       ;
       
@@ -130,6 +130,8 @@
       //      return chart_margin.top + (i * 40);
       //    })
       //;
+      
+      
       
       
     </script>
