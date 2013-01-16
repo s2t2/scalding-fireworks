@@ -13,64 +13,102 @@
         font-family: 'Droid Serif', serif;
         @import url(http://fonts.googleapis.com/css?family=Droid+Sans|Stalemate|Droid+Serif:400,700);
       */
-      div#chart_container {
-        margin:25px auto;
-        height: 400px;
-        
-        border:2px solid #000;
-        overflow: scroll;
+      .axis text {
+        font-size:16px;
+        font-family: serif;
       }
-      svg.project_row {
-        height: 100px;
-        border:1px dotted #ccc;
-        font: 24px 'Lato', sans-serif;
-        background-color: #ccc;
+      .axis path,
+      .axis line {
+          fill: none;
+          stroke: black;
+          shape-rendering: crispEdges;
       }
+      
     </style>
     <script src="http://d3js.org/d3.v2.min.js?2.9.6"></script>
   </head>
   <body>
     <script type="text/javascript">
       
-      data = {
-        "projects": [
-          {'id':'1',  'title':"First Project"},
-          {'id':'2',  'title':"Second Project"},
-          {'id':'3',  'title':"Third Project"},
-          {'id':'4',  'title':"Fourth Project"},
-          {'id':'5',  'title':"Fifth Project"},
-          
-        ]
-      };
+      //DRAW h3#chart_title
+      //var chart_title = d3.select('body').append('h3')
+      //    .attr('id','chart_title') 
+      //  .text('Projects over Time')
+      //;
       
-      var chart_title = d3.select('body').append('h3')
-          .attr('id','chart_title') // h3#chart_title
-        .text('Durations over Time')
+      /////////////////////////////////////////////////////////////
+      // DATA
+      /////////////////////////////////////////////////////////////
+      var projects = [
+        {'id':'1',  'title':"First Project",  "durations": [
+            {"start":"2012-01-01",  "end":"2012-01-08"}
+          ]
+        },
+        {'id':'2',  'title':"Second Project",  "durations": [
+            {"start":"2012-01-02",  "end":"2012-01-09"},
+            {"start":"2012-01-12",  "end":"2012-01-19"}
+          ]
+        },
+        {'id':'3',  'title':"Third Project",  "durations": [
+            {"start":"2012-01-03",  "end":"2012-01-10"},
+            {"start":"2012-01-13",  "end":"2012-01-20"},
+            {"start":"2012-01-23",  "end":"2012-01-30"}
+          ]
+        },
+        {'id':'4',  'title':"Fourth Project",  "durations": [
+            {"start":"2012-02-01",  "end":"2012-02-08"}
+          ]
+        },
+        {id:5,  title:"Fifth Project",  durations: [
+            {start:"2012-02-15",  end:"2012-02-19"}
+          ]
+        }
+      ];
+      var chart_margin = {top: 40, right: 40, bottom: 40, left:40};
+      var chart_width = 1000;
+      var chart_height = 400;
+      var time_scale_start = new Date('2012-01-01');
+      var time_scale_end = new Date('2012-12-31');
+      
+      /////////////////////////////////////////////////////////////
+      // SVG with SCALE and AXIS
+      /////////////////////////////////////////////////////////////
+      var x = d3.time.scale()
+        .domain([time_scale_start, time_scale_end])
+        .range([chart_margin.left, chart_width - chart_margin.left - chart_margin.right])
       ;
-      
-      var chart_container = d3.select('body').append('div')
-          .attr('id','chart_container') // div#chart_container
+      var xAxis = d3.svg.axis()
+        .scale(x)
+        //.orient('bottom')
+        .ticks(d3.time.months)
+        .tickFormat(d3.time.format('%m/%d/%y'))
       ;
-      
-      var project_rows = chart_container.selectAll('svg').data(data.projects).enter().append('svg')
-          .attr('class', 'project_row') // svg.project_row
-          .attr('id', function(d){
-            return 'project_' + d.id; // svg#project_[id]
-          })
-        .append('text')
-            .text(function(d){
-              return d.title;
-            })
-            .attr('class','project_title') // text.project_title
-            .attr('x', 10)
-            .attr('y', 30)
+      var chart = d3.select('body').append('svg')
+          .attr('height', chart_height)
+          .attr('width', chart_width)
+          .attr('id',"chart")
+          .attr('style','background-color: #ccc;')
       ;
-      
-      
-      
-      
-      
+      chart.append("g")
+          .attr('id','x-axis')
+          .attr('class', 'axis')
+          .attr('transform', 'translate(0,10)')
+          .call(xAxis)
+      ;
     
+      
+      //text.project_titles
+      //var project_titles = chart.selectAll('text').data(projects).enter().append('text')
+      //  .text(function(d){
+      //    return d.title;
+      //  })
+      //    .attr('class','project_titles')
+      //    .attr('x', 5)
+      //    .attr('y', function(d,i){
+      //      return chart_margin.top + (i * 40);
+      //    })
+      //;
+      
       
     </script>
   </body>
