@@ -25,26 +25,26 @@
       /////////////////////////////////////////////////////////////
       var projects = [
         {id:1,  title:"First Project",  durations: [
-            {start:"2012-01-01",  end:"2012-01-08"}
+            {project_index:0, start:"2012-01-01",  end:"2012-01-08"}
           ]
         },
         {id:2,  title:"Second Project",  durations: [
-            {start:"2012-01-02",  end:"2012-01-09"},
-            {start:"2012-01-12",  end:"2012-01-19"}
+            {project_index:1, start:"2012-01-02",  end:"2012-01-09"},
+            {project_index:1, start:"2012-01-12",  end:"2012-01-19"}
           ]
         },
         {id:3,  title:"Third Project",  durations: [
-            {start:"2012-01-03",  end:"2012-01-10"},
-            {start:"2012-01-13",  end:"2012-01-20"},
-            {start:"2012-01-23",  end:"2012-01-30"}
+            {project_index:2, start:"2012-01-03",  end:"2012-01-10"},
+            {project_index:2, start:"2012-01-13",  end:"2012-01-20"},
+            {project_index:2, start:"2012-01-23",  end:"2012-01-30"}
           ]
         },
         {id:4,  title:"Fourth Project",  durations: [
-            {start:"2012-02-01",  end:"2012-02-08"}
+            {project_index:3, start:"2012-02-01",  end:"2012-02-08"}
           ]
         },
         {id:5,  title:"Fifth Project",  durations: [
-            {start:"2012-02-15",  end:"2012-02-19"}
+            {project_index:4, start:"2012-02-15",  end:"2012-02-19"}
           ]
         }
       ];
@@ -84,11 +84,17 @@
           .attr('class', 'projects')
           .attr('id', function(d){ return d.id; })
       ;
-      var rect = g.selectAll('rect').data(function(d){ return d.durations; }).enter().append('rect') //loop through each duration
+      var rect = g.selectAll('rect')
+          .data(function(d){ 
+            return d.durations; 
+          }) //loop through each duration
+        .enter().append('rect') 
           .attr('class', 'durations')
           .attr('id', function(d,i){ return i; })
-          .attr('x', function(d){ return x(new Date(d.start)); }) //pass the data through the time scale to convert to a number
-          .attr('y', function(d,i){ return chart_margin.top + (i*40); })
+          .attr('x', function(d){ return x(new Date(d.start)); }) //pass the data through the time scale to convert to a number  
+          .attr('y', function(d){ 
+            return chart_margin.top + ( parseInt(d.project_index,10) * 40); //#TODO: find the parent's index
+          }) 
           .attr('height', 10)
           .attr('width', function(d){ return x(new Date(d.end)) - x(new Date(d.start)); }) //derive duration from start and end
           .attr('fill', limon)
